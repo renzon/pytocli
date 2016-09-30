@@ -29,5 +29,5 @@ But you realize it has many options:`
 'git -v'
 >>> git(p=True, v=True)
 'git -p -v'
-``
+```
 So the spaghetti code begins.
