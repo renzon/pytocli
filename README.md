@@ -31,3 +31,21 @@ But you realize it has many options:`
 'git -p -v'
 ```
 So the spaghetti code begins.
+
+# Lib Goal
+
+```python
+>>> from pytocli.example.git.Git
+>>> str(Git())
+'git'
+>>> str(Git().p())
+'git'
+>>> str(Git().v())
+'git -v'
+>>> str(Git().p().v())
+'git -p -v'
+>>> help(Git.p)
+'insert -p option which paginates result'
+>>> help(Git.p)
+'insert -v to verbose mode'
+```
