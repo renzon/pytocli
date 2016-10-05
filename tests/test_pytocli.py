@@ -3,23 +3,23 @@ from __future__ import absolute_import, unicode_literals
 
 import pytest
 
-from pytocli import Command, SubCommand
+from pytocli import CommandBuilder, SubCommandBuilder
 
 
-class Git(Command):
+class Git(CommandBuilder):
     name = 'git'
 
     def paginate(self):
         """Add paginate option to git command
 
-        :return: Command for chaining calls
+        :return: CommandBuilder for chaining calls
         """
         return self.dashed_option('p')
 
     def help(self):
         """Add help option to git command
 
-        :return: Command for chaining calls
+        :return: CommandBuilder for chaining calls
         """
         return self.double_dashed_option('help')
 
@@ -39,7 +39,7 @@ class Git(Command):
         return Commit(self)
 
 
-class Commit(SubCommand):
+class Commit(SubCommandBuilder):
     name = 'commit'
 
     @property

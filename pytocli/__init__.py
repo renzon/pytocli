@@ -91,7 +91,7 @@ class DoubleDashedMultiValueOption(MultiValuesOption):
         return '--{} {}'.format(self.name, self._values_str())
 
 
-class Command(object):
+class CommandBuilder(object):
     """Base clas for all commands"""
 
     name = ''
@@ -152,13 +152,13 @@ class Command(object):
         return ' '.join((self.name, options_str))
 
 
-class SubCommand(Command):
+class SubCommandBuilder(CommandBuilder):
     def __init__(self, parent_cmd):
-        super(SubCommand, self).__init__()
+        super(SubCommandBuilder, self).__init__()
         self.parent_cmd = parent_cmd
 
     def __str__(self):
         return '{} {}'.format(
             self.parent_cmd,
-            super(SubCommand, self).__str__(),
+            super(SubCommandBuilder, self).__str__(),
         )

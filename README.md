@@ -55,38 +55,38 @@ The lib goal is provide a fluent interface to generate cli commands:
 
 ## How to extend the framework. Use Case: git like
 
-### Step 1: inherit from Command class
+### Step 1: inherit from CommandBuilder class
 
 The command name must be overwritten as class attribute.
  
 ```python
-from pytocli import Command
+from pytocli import CommandBuilder
 
 
-class Git(Command):
+class Git(CommandBuilder):
     name = 'git'
 ```
 
 ## Step 2: create command option with aux methods
  
 ```python
-from pytocli import Command
+from pytocli import CommandBuilder
 
 
-class Git(Command):
+class Git(CommandBuilder):
     name = 'git'
 
     def paginate(self):
         """Add paginate option to git command
 
-        :return: Command for chaining calls
+        :return: CommandBuilder for chaining calls
         """
         return self.dashed_option('p')
 
     def help(self):
         """Add help option to git command
 
-        :return: Command for chaining calls
+        :return: CommandBuilder for chaining calls
         """
         return self.double_dashed_option('help')
 
@@ -106,20 +106,20 @@ class Git(Command):
 ## Step 3: create a subcomman following steps 1 and 2
  
 ```python
-from pytocli import SubCommand
+from pytocli import SubCommandBuilder
 
 
-class Commit(SubCommand):
+class Commit(SubCommandBuilder):
     name = 'commit'
 
     def message(self, msg):
         return self.dashed_value_option('m', msg)
 ```
 
-## Step 4: create method on Command connecting it with SubCommand
+## Step 4: create method on CommandBuilder connecting it with SubCommandBuilder
  
 ```python
-class Git(Command):
+class Git(CommandBuilder):
     name = 'git'
 
     #other methods are hidden
@@ -136,8 +136,10 @@ Passing parameters to parent command can be done even after subcommand creation:
 >>> commit = Git().commit()
 >>> str(commit)
 'git commit'
+>>> commit.parent_cmd
+'git'
 >>> commit.parent_cmd.paginate()
-'git -p commit'
+'git -p'
 >>> str(commit)
 'git -p commit'
 
@@ -146,7 +148,7 @@ Passing parameters to parent command can be done even after subcommand creation:
 property can be used to create more semantic command:
  
 ```python
-class Commit(SubCommand):
+class Commit(SubCommandBuilder):
     name = 'commit'
 
     @property
@@ -159,8 +161,10 @@ So the command can be:
 >>> commit = Git().commit()
 >>> str(commit)
 'git commit'
+>>> commit.git
+'git'
 >>> commit.git.paginate()
-'git -p commit'
+'git -p'
 >>> str(commit)
 'git -p commit'
 
