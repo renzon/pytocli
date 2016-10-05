@@ -127,3 +127,41 @@ class Git(Command):
     def commit(self):
         return Commit(self)
 ```
+
+## Step 5: Add parameters to Parent command
+
+Passing parameters to parent command can be done even after subcommand creation:
+ 
+```python
+>>> commit = Git().commit()
+>>> str(commit)
+'git commit'
+>>> commit.parent_cmd.paginate()
+'git -p commit'
+>>> str(commit)
+'git -p commit'
+
+```
+
+property can be used to create more semantic command:
+ 
+```python
+class Commit(SubCommand):
+    name = 'commit'
+
+    @property
+    def git(self):
+        return self.parent_cmd
+```
+So the command can be:
+
+```python
+>>> commit = Git().commit()
+>>> str(commit)
+'git commit'
+>>> commit.git.paginate()
+'git -p commit'
+>>> str(commit)
+'git -p commit'
+
+```

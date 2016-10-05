@@ -42,6 +42,10 @@ class Git(Command):
 class Commit(SubCommand):
     name = 'commit'
 
+    @property
+    def git(self):
+        return self.parent_cmd
+
     def message(self, msg):
         return self.dashed_value_option('m', msg)
 
@@ -130,3 +134,12 @@ def test_complete_chaining():
     assert 'git -p --exec-path foo' == str(cmd.exec('foo'))
     assert 'git -p --exec-path foo commit -m bar' == str(cmd.commit().message('bar'))
     assert 'git -p commit -m baz' == str(Git().paginate().commit().message('baz'))
+
+
+def test_parent_command_access():
+    commit = Git().commit()
+    commit.parent_cmd.paginate()
+    assert 'git -p commit' == str(commit)
+    commit = Git().commit()
+    commit.git.paginate()
+    assert 'git -p commit' == str(commit)

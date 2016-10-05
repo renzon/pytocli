@@ -145,7 +145,7 @@ class Command(object):
         """Add double dashed option with multiple values"""
         return self._add_value_option(DoubleDashedMultiValueOption, option, *values)
 
-    def __str__(self):
+    def __repr__(self):
         if not self.options:
             return self.name
         options_str = ' '.join(map(str, self.options.values()))
