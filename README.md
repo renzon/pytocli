@@ -103,7 +103,7 @@ class Git(CommandBuilder):
         return self.double_dashed_multi_value_option('dfake', *values)
 
 ```
-## Step 3: create a subcomman following steps 1 and 2
+## Step 3: create a subcommand following steps 1 and 2
  
 ```python
 from pytocli import SubCommandBuilder
