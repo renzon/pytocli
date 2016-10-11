@@ -14,6 +14,7 @@ class GitSubCommand(SubCommandBuilder):
 
 
 class Commit(GitSubCommand):
+    """git commit sub command"""
     name = 'commit'
     message = Option(SingleValueOption, '-m', 'Message to be added on commit')
 
@@ -65,6 +66,10 @@ def test_multivalue():
     cmd = Git()
     assert 'git --mu 1 2' == str(cmd.multi(1, 2))
     assert 'git --mu 1 2 3' == str(cmd.multi(3))
+
+
+def test_chaining():
+    assert 'git -v -C foo.git' == str(Git().verbose().start('foo.git'))
 
 
 def test_doc_on_repr():

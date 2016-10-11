@@ -85,7 +85,7 @@ class Option(object):
         self.doc = doc
         self.count = self.instances_counter
         self.option_factory = option_factory
-        self.name = None
+        self._attr = None
 
     def _set_attr_name(self, name):
         self._attr = name
@@ -94,9 +94,9 @@ class Option(object):
         # if has no instance, this is a class access. Returning self to provide useful repr
         if instance is None:
             return self
-        if self.name not in instance.current_options:
-            instance.current_options[self.name] = self.option_factory(self.option_name, instance)
-        return instance.current_options[self.name]
+        if self._attr not in instance.current_options:
+            instance.current_options[self._attr] = self.option_factory(self.option_name, instance)
+        return instance.current_options[self._attr]
 
     def __repr__(self):
         return 'Option {}: {}'.format(self.option_name, self.doc)
@@ -116,9 +116,9 @@ class SubCommand(object):
         self._attr = name
 
     def __get__(self, instance, owner):
-        # if has no instance, this is a class access. Returning self to provide useful repr
+        # if has no instance, return class for documentation purpose
         if instance is None:
-            return self
+            return self.cmd_factory
         return self.cmd_factory(instance)
 
     def __repr__(self):
