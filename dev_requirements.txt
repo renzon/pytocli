@@ -1,3 +1,4 @@
+-r requirements.txt
 flake8==3.0.4
 mccabe==0.5.2
 py==1.4.31
@@ -5,4 +6,3 @@ pycodestyle==2.0.0
 pyflakes==1.3.0
 pytest==3.0.3
 pytest-cov==2.4.0
-six==1.10.0

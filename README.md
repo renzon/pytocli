@@ -4,7 +4,13 @@ A Python lib to generate CLI commands
 
 [![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
 [![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
-[![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/) 
+[![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/)
+
+You can install it through pip:
+
+```console
+pip install pytocli
+``` 
 ## Problem
 
 You need generate some CLI commands and start simple as
@@ -42,17 +48,15 @@ So the spaghetti code begins.
 The lib goal is provide a fluent interface to generate cli commands:
 
 ```python
->>> from tests.test_pytocli import Git
+>>> from tests.test_base import Git
 >>> str(Git())
 'git'
->>> str(Git().paginate())
-'git -p'
->>> str(Git().help())
-'git --help'
->>> str(Git().paginate().help())
-'git -p --help'
->>> str(Git().paginate().help().commit().message('bar'))
-'git -p --help commit -m bar'
+>>> str(Git().start('foo.git'))
+'git -C foo.git'
+>>> str(Git().verbose().start('bar.git'))
+'git -v -C bar.git'
+>>> str(Git().verbose().start('baz.git').commit.message('great!'))
+'git -v -C baz.git commit -m great!'
 
 ```
 
@@ -70,65 +74,61 @@ class Git(CommandBuilder):
     name = 'git'
 ```
 
-## Step 2: create command option with aux methods
+## Step 2: create command options
  
 ```python
-from pytocli import CommandBuilder
+from pytocli import (CommandBuilder, Option, NoValueOption, 
+                     SingleValueOption, MultiValuesOption)
 
 
 class Git(CommandBuilder):
     name = 'git'
-
-    def paginate(self):
-        """Add paginate option to git command
-
-        :return: CommandBuilder for chaining calls
-        """
-        return self.dashed_option('p')
-
-    def help(self):
-        """Add help option to git command
-
-        :return: CommandBuilder for chaining calls
-        """
-        return self.double_dashed_option('help')
-
-    def start(self, value):
-        return self.dashed_value_option('C', value)
-
-    def exec_path(self, value):
-        return self.double_dashed_value_option('exec_path', value)
-
-    def fake(self, *values):
-        return self.dashed_multi_value_option('fake', *values)
-
-    def dfake(self, *values):
-        return self.double_dashed_multi_value_option('dfake', *values)
+    # Options
+    verbose = Option(NoValueOption, '-v', 'Verbose mode')
+    start = Option(SingleValueOption, '-C')
+    multi = Option(MultiValuesOption, '--mu')
 
 ```
-## Step 3: create a subcomman following steps 1 and 2
+## Step 3: create a sub commands following steps 1 and 2
  
 ```python
-from pytocli import SubCommandBuilder
+from pytocli import (CommandBuilder, Option, NoValueOption, 
+                     SingleValueOption, MultiValuesOption, 
+                     SubCommandBuilder)
 
 
-class Commit(SubCommandBuilder):
+
+class GitSubCommand(SubCommandBuilder):
+    @property
+    def git(self):
+        return self.parent_cmd
+
+
+class Commit(GitSubCommand):
     name = 'commit'
+    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
 
-    def message(self, msg):
-        return self.dashed_value_option('m', msg)
+
+class Revert(GitSubCommand):
+    name = 'revert'
+
 ```
 
-## Step 4: create method on CommandBuilder connecting it with SubCommandBuilder
+## Step 4: Connecting CommandBuilder connecting SubCommandBuilders
  
 ```python
+
 class Git(CommandBuilder):
     name = 'git'
+    # Options
+    verbose = Option(NoValueOption, '-v', 'Verbose mode')
+    start = Option(SingleValueOption, '-C')
+    multi = Option(MultiValuesOption, '--mu')
 
-    #other methods are hidden
-    
-    def commit(self):
-        return Commit(self)
+    # SubCommands
+    commit = SubCommand(Commit)
+    revert = SubCommand(Revert)
+
 ```
 
 ## Step 5: Add parameters to Parent command
@@ -136,39 +136,31 @@ class Git(CommandBuilder):
 Passing parameters to parent command can be done even after subcommand creation:
  
 ```python
->>> commit = Git().commit()
+>>> commit = Git().commit
 >>> str(commit)
 'git commit'
 >>> commit.parent_cmd
 git
->>> commit.parent_cmd.paginate()
-git -p
+>>> commit.parent_cmd.verbose()
+git -v
 >>> str(commit)
-'git -p commit'
+'git -v commit'
 
 ```
 
-property can be used to create more semantic command:
- 
-```python
-class Commit(SubCommandBuilder):
-    name = 'commit'
-
-    @property
-    def git(self):
-        return self.parent_cmd
-```
-So the command can be:
+# Exploring CLI from Python Command Line
 
 ```python
->>> commit = Git().commit()
->>> str(commit)
-'git commit'
->>> commit.git
-git
->>> commit.git.paginate()
-git -p
->>> str(commit)
-'git -p commit'
+
+>>> from tests.test_base import *
+>>> Git.options
+('verbose', 'start', 'multi')
+>>> Git.verbose
+Option -v: Verbose mode
+>>> Git.sub_commands
+('commit', 'revert')
+>>> Git.commit.options
+('message',)
 
 ```
+

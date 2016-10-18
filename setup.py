@@ -135,5 +135,5 @@ setup(
         "Framework :: Paste",
     ],
     zip_safe=False,
-    install_requires=[]
+    install_requires=['six>=1.10.0']
 )
