@@ -88,8 +88,14 @@ def test_dashed_value_option_duplicated():
 
 def test_double_dashed_value_option():
     assert ('git --exec_path-path /usr/bin/git' ==
-            str(Git().double_dashed_value_option('exec_path-path', '/usr/bin/git')))
-    assert 'git --exec_path-path /usr/bin/git' == str(Git().exec_path('/usr/bin/git'))
+            str(
+                Git().double_dashed_value_option(
+                    'exec_path-path',
+                    '/usr/bin/git')
+            )
+            )
+    assert 'git --exec_path-path /usr/bin/git' == str(
+        Git().exec_path('/usr/bin/git'))
 
 
 def test_double_dashed_value_option_duplicated():
