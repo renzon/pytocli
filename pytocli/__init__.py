@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-__version__ = '0.1'
-
 from collections import OrderedDict
+
+__version__ = '0.1'
 
 
 class Option(object):
@@ -25,7 +25,9 @@ class Option(object):
 
 
 class ValueOption(Option):
-    """Base class for all options which have exactly one value . Must be extended"""
+    """Base class for all options which have exactly one value.
+    Must be extended
+    """
 
     def __init__(self, name):
         super(ValueOption, self).__init__(name)
@@ -33,19 +35,21 @@ class ValueOption(Option):
 
     def add_value(self, value):
         if self.value is not None:
-            raise ValueError(
-                'option {} has already value {} which can not be overwritten by {}'.format(
-                    self.name, self.value, value
-                )
-            )
+            tmpl = ('option {} has already value {} which can not be '
+                    'overwritten by {}')
+            raise ValueError(tmpl.format(self.name, self.value, value))
         self.value = str(value)
 
     def __repr__(self):
-        return '{} with name {} and value {!r}'.format(type(self), self.name, self.value)
+        return '{} with name {} and value {!r}'.format(
+            type(self), self.name, self.value
+        )
 
 
 class MultiValuesOption(Option):
-    """Base class for all options which have can have multiple values. Must be extended"""
+    """Base class for all options which have can have multiple values.
+    Must be extended
+    """
 
     def __init__(self, name):
         super(MultiValuesOption, self).__init__(name)
@@ -58,7 +62,8 @@ class MultiValuesOption(Option):
         return ' '.join(self.values)
 
     def __repr__(self):
-        return '{} with name {} and values {!r}'.format(type(self), self.name, self.values)
+        return '{} with name {} and values {!r}'.format(
+            type(self), self.name, self.values)
 
 
 class DashedOption(Option):
@@ -101,7 +106,8 @@ class CommandBuilder(object):
 
     def _add_option(self, cls, option):
         if option in self.options:
-            raise ValueError('option {} is already present'.format(self.options[option]))
+            raise ValueError(
+                'option {} is already present'.format(self.options[option]))
         self.options[option] = cls(option)
         return self
 
@@ -143,7 +149,8 @@ class CommandBuilder(object):
 
     def double_dashed_multi_value_option(self, option, *values):
         """Add double dashed option with multiple values"""
-        return self._add_value_option(DoubleDashedMultiValueOption, option, *values)
+        return self._add_value_option(DoubleDashedMultiValueOption, option,
+                                      *values)
 
     def __repr__(self):
         if not self.options:

@@ -87,7 +87,8 @@ def test_dashed_value_option_duplicated():
 
 
 def test_double_dashed_value_option():
-    assert 'git --exec-path /usr/bin/git' == str(Git().double_dashed_value_option('exec-path', '/usr/bin/git'))
+    assert ('git --exec-path /usr/bin/git' ==
+            str(Git().double_dashed_value_option('exec-path', '/usr/bin/git')))
     assert 'git --exec-path /usr/bin/git' == str(Git().exec('/usr/bin/git'))
 
 
@@ -132,8 +133,10 @@ def test_complete_chaining():
     assert 'git' == str(cmd)
     assert 'git -p' == str(cmd.paginate())
     assert 'git -p --exec-path foo' == str(cmd.exec('foo'))
-    assert 'git -p --exec-path foo commit -m bar' == str(cmd.commit().message('bar'))
-    assert 'git -p commit -m baz' == str(Git().paginate().commit().message('baz'))
+    assert 'git -p --exec-path foo commit -m bar' == str(
+        cmd.commit().message('bar'))
+    assert ('git -p commit -m baz' ==
+            str(Git().paginate().commit().message('baz')))
 
 
 def test_parent_command_access():
