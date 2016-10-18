@@ -125,12 +125,13 @@ class SubCommand(object):
     def __get__(self, instance, owner):
         # if has no instance, return class for documentation purpose
         if instance is None:
-            return self.cmd_factory
+            return self
         return self.cmd_factory(instance)
 
     def __repr__(self):
-        return 'SubCommand {}: {}'.format(self.cmd_factory.name,
-                                          self.__doc__ or 'No doc provided')
+        return 'SubCommand {}: {}'.format(
+            self.cmd_factory.name,
+            self.cmd_factory.__doc__ or 'No doc provided')
 
 
 class _CommandMeta(type):
@@ -187,6 +188,9 @@ class SubCommandBuilder(CommandBuilder):
     def __init__(self, parent_cmd):
         super(SubCommandBuilder, self).__init__()
         self.parent_cmd = parent_cmd
+
+    def __str__(self):
+        return repr(self)
 
     def __repr__(self):
         return '{} {}'.format(

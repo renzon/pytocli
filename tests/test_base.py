@@ -77,11 +77,16 @@ def test_multivalue():
     assert 'git --mu 1 2 3' == str(cmd.multi(3))
 
 
+def test_multivalue_with_no_parameter():
+    with pytest.raises(ValueError):
+        Git().multi()
+
+
 def test_chaining():
     assert 'git -v -C foo.git' == str(Git().verbose().start('foo.git'))
 
 
-def test_doc_on_repr():
+def test_doc_on_repr_for_options():
     assert 'Option -v: Verbose mode' == repr(Git.verbose)
     assert 'Option --mu: No doc provided' == repr(Git.multi)
 
@@ -92,6 +97,10 @@ def test_options_tuple():
 
 def test_simple_sub_command():
     assert 'git commit' == str(Git().commit)
+
+
+def test_simple_sub_command_doc_as_class_attr():
+    assert 'SubCommand commit: git commit sub command' == repr(Git.commit)
 
 
 def test_chaining_sub_command():
