@@ -1,6 +1,8 @@
 # pytocli
 
 A Python lib to generate CLI commands
+
+[![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
  
 ## Problem
 
