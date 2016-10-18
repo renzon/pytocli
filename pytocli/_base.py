@@ -35,7 +35,7 @@ class NoValueOption(OptionFactory):
     """Base class for all options which have no value . Must be extended"""
 
     def add_values(self, *values):
-        if len(self.values) > 0:
+        if len(values) > 0:
             raise ValueError(
                 'option {} does not accept any value. value(s): {}'.format(
                     self.name, self.values)

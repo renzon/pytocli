@@ -43,9 +43,13 @@ def test_simple_command():
 def test_no_value():
     assert 'git -v' == str(Git().verbose())
 
+
 def test_no_value_can_not_receive_value():
     with pytest.raises(ValueError):
         Git().verbose('foo')
+    cmd = Git().verbose()
+    with pytest.raises(ValueError):
+        cmd.verbose('later parameter')
 
 
 def test_single_value():
