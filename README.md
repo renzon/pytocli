@@ -140,9 +140,9 @@ Passing parameters to parent command can be done even after subcommand creation:
 >>> str(commit)
 'git commit'
 >>> commit.parent_cmd
-git
+CommandBuilder git: No doc provided
 >>> commit.parent_cmd.verbose()
-git -v
+CommandBuilder git: No doc provided
 >>> str(commit)
 'git -v commit'
 

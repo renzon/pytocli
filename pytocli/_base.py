@@ -182,7 +182,7 @@ class CommandBuilder(with_metaclass(_CommandMeta)):
         return ' '.join((self.name, options_str))
 
     def __repr__(self):
-        return 'Command {}: {}'.format(
+        return 'CommandBuilder {}: {}'.format(
             self.name,
             self.__doc__ or 'No doc provided')
 
@@ -199,6 +199,6 @@ class SubCommandBuilder(CommandBuilder):
         )
 
     def __repr__(self):
-        return 'SubCommand {}: {}'.format(
+        return 'SubCommandBuilder {}: {}'.format(
             self.name,
             self.__doc__ or 'No doc provided')
