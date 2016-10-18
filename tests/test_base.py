@@ -133,3 +133,11 @@ def test_option_factory_repr():
 def test_option_factory_add_values_is_abstract():
     with pytest.raises(NotImplementedError):
         OptionFactory('foo', 'foo').add_values()
+
+
+def test_options_class_attr():
+    assert ('verbose', 'start', 'multi') == Git.options
+
+
+def test_sub_commands_class_attr():
+    assert ('commit', 'revert') == Git.sub_commands

@@ -123,9 +123,10 @@ class SubCommand(object):
         self._attr = name
 
     def __get__(self, instance, owner):
-        # if has no instance, return class for documentation purpose
+        # if has no instance, return instance with generic object for
+        # documentation purpose
         if instance is None:
-            return self
+            return self.cmd_factory(object())
         return self.cmd_factory(instance)
 
     def __repr__(self):
@@ -175,13 +176,15 @@ class CommandBuilder(with_metaclass(_CommandMeta)):
         # instance
 
     def __str__(self):
-        return repr(self)
-
-    def __repr__(self):
         if len(self.current_options) == 0:
             return self.name
         options_str = ' '.join(map(str, self.current_options.values()))
         return ' '.join((self.name, options_str))
+
+    def __repr__(self):
+        return 'Command {}: {}'.format(
+            self.name,
+            self.__doc__ or 'No doc provided')
 
 
 class SubCommandBuilder(CommandBuilder):
@@ -190,10 +193,12 @@ class SubCommandBuilder(CommandBuilder):
         self.parent_cmd = parent_cmd
 
     def __str__(self):
-        return repr(self)
-
-    def __repr__(self):
         return '{} {}'.format(
             self.parent_cmd,
-            super(SubCommandBuilder, self).__repr__()
+            super(SubCommandBuilder, self).__str__()
         )
+
+    def __repr__(self):
+        return 'SubCommand {}: {}'.format(
+            self.name,
+            self.__doc__ or 'No doc provided')

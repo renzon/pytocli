@@ -164,3 +164,13 @@ Option -v: Verbose mode
 
 ```
 
+#Release Notes
+
+## Version 0.1
+* first approach with methods and regular Object Orientation
+
+## Version 0.2
+* second approach with Metaclass and Descriptors
+## Version 0.2
+* Fixed NoOptionValue raises error when passing parameter
+* Fixed Command.sub_commands
