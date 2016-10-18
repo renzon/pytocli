@@ -7,5 +7,6 @@ python:
 install: "pip install -r dev_requirements.txt coveralls"
 # command to run tests
 script:
-  - py.test tests
-  - coverage run --source=pytocli py.test tests
+  - py.test
+after_success:
+  - coverage run py.test

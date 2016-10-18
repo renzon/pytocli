@@ -2,7 +2,8 @@
 
 A Python lib to generate CLI commands
 
-[![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
+[![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
  
 ## Problem
 
