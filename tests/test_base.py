@@ -3,8 +3,8 @@ from __future__ import absolute_import, unicode_literals
 
 import pytest
 
-from pytocli import (CommandBuilder, Option, NoValueOption, SingleValueOption, MultiValuesOption, SubCommandBuilder,
-                     SubCommand)
+from pytocli import (CommandBuilder, Option, NoValueOption, SingleValueOption,
+                     MultiValuesOption, SubCommandBuilder, SubCommand)
 
 
 class GitSubCommand(SubCommandBuilder):
@@ -86,12 +86,14 @@ def test_simple_sub_command():
 
 
 def test_chaining_sub_command():
-    assert 'git -v commit -m "a great msg"' == str(Git().verbose().commit.message('"a great msg"'))
+    assert ('git -v commit -m "a great msg"' ==
+            str(Git().verbose().commit.message('"a great msg"')))
 
 
 def test_add_option_to_parent():
     commit = Git().commit
-    assert 'git commit -m "a great msg"' == str(commit.message('"a great msg"'))
+    assert ('git commit -m "a great msg"' ==
+            str(commit.message('"a great msg"')))
     commit.git.verbose()
     assert 'git -v commit -m "a great msg"' == str(commit)
 

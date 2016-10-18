@@ -19,7 +19,8 @@ class OptionFactory(object):
         raise NotImplementedError()
 
     def __repr__(self):
-        return '{} Option with name {} and value {!r}'.format(type(self).__name__, self.name, self.values)
+        return '{} Option with name {} and value {!r}'.format(
+            type(self).__name__, self.name, self.values)
 
     def add_values(self, *values):
         """Concrete classes need to decide when adding values is possible"""
@@ -36,7 +37,8 @@ class NoValueOption(OptionFactory):
     def add_values(self, *values):
         if len(self.values) > 0:
             raise ValueError(
-                'option {} does not accept any value. value(s): {}'.format(self.name, self.values)
+                'option {} does not accept any value. value(s): {}'.format(
+                    self.name, self.values)
             )
 
     def __str__(self):
@@ -44,7 +46,8 @@ class NoValueOption(OptionFactory):
 
 
 class SingleValueOption(OptionFactory):
-    """Base class for all options which have exactly one value. Must be extended"""
+    """Base class for all options which have exactly one value. Must be
+    extended"""
 
     def add_values(self, *values):
         if len(values) != 1 or len(self.values) != 0:
@@ -60,13 +63,15 @@ class SingleValueOption(OptionFactory):
 
 
 class MultiValuesOption(OptionFactory):
-    """Base class for all options which have exactly one value. Must be extended"""
+    """Base class for all options which have exactly one value. Must be
+    extended"""
     values_separator = ' '
 
     def add_values(self, *values):
         if len(values) == 0 and len(self.values) == 0:
             raise ValueError(
-                'option {} must have exactly at least one value'.format(self.name)
+                'option {} must have exactly at least one value'.format(
+                    self.name)
             )
         self.values.extend(values)
 
@@ -91,11 +96,13 @@ class Option(object):
         self._attr = name
 
     def __get__(self, instance, owner):
-        # if has no instance, this is a class access. Returning self to provide useful repr
+        # if has no instance, this is a class access. Returning self to
+        # provide useful repr
         if instance is None:
             return self
         if self._attr not in instance.current_options:
-            instance.current_options[self._attr] = self.option_factory(self.option_name, instance)
+            instance.current_options[self._attr] = self.option_factory(
+                self.option_name, instance)
         return instance.current_options[self._attr]
 
     def __repr__(self):
@@ -122,7 +129,8 @@ class SubCommand(object):
         return self.cmd_factory(instance)
 
     def __repr__(self):
-        return 'SubCommand {}: {}'.format(self.cmd_factory.name, self.__doc__ or 'No doc provided')
+        return 'SubCommand {}: {}'.format(self.cmd_factory.name,
+                                          self.__doc__ or 'No doc provided')
 
 
 class _CommandMeta(type):
@@ -133,9 +141,11 @@ class _CommandMeta(type):
             descriptor._set_attr_name(name)
             return descriptor
 
-        options = [set_descriptor_attr_name(attr_value, attr_name)
-                   for attr_name, attr_value in attrs.items()
-                   if hasattr(attr_value, '_set_attr_name')]
+        options = [
+            set_descriptor_attr_name(attr_value, attr_name)
+            for attr_name, attr_value in attrs.items()
+            if hasattr(attr_value, '_set_attr_name')
+            ]
         options.sort(key=lambda op: op.count)
 
         def set_descriptor_cmd_attr_name(descriptor, name):
@@ -150,7 +160,8 @@ class _CommandMeta(type):
         attrs['options'] = tuple(op._attr for op in options)
         attrs['sub_commands'] = tuple(sub._attr for sub in sub_commands)
 
-        return super(_CommandMeta, cls).__new__(cls, class_to_be_created_name, bases, attrs)
+        return super(_CommandMeta, cls).__new__(cls, class_to_be_created_name,
+                                                bases, attrs)
 
 
 class CommandBuilder(with_metaclass(_CommandMeta)):
@@ -159,7 +170,8 @@ class CommandBuilder(with_metaclass(_CommandMeta)):
     sub_commands = tuple()  # going to be filled by _CommandMeta
 
     def __init__(self):
-        self.current_options = OrderedDict()  # options added to command instance
+        self.current_options = OrderedDict()  # options added to command
+        # instance
 
     def __str__(self):
         return repr(self)
