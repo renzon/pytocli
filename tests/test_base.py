@@ -5,6 +5,7 @@ import pytest
 
 from pytocli import (CommandBuilder, Option, NoValueOption, SingleValueOption,
                      MultiValuesOption, SubCommandBuilder, SubCommand)
+from pytocli._base import OptionFactory
 
 
 class GitSubCommand(SubCommandBuilder):
@@ -41,6 +42,10 @@ def test_simple_command():
 
 def test_no_value():
     assert 'git -v' == str(Git().verbose())
+
+def test_no_value_can_not_receive_value():
+    with pytest.raises(ValueError):
+        Git().verbose('foo')
 
 
 def test_single_value():
@@ -100,3 +105,18 @@ def test_add_option_to_parent():
 
 def test_sub_commands_tuple():
     assert ('commit', 'revert') == Git.sub_commands
+
+
+def test_option_factory_str_is_abstract():
+    with pytest.raises(NotImplementedError):
+        str(OptionFactory('foo', 'foo'))
+
+
+def test_option_factory_repr():
+    assert ('OptionFactory Option with name foo and value []' ==
+            repr(OptionFactory('foo', 'bar')))
+
+
+def test_option_factory_add_values_is_abstract():
+    with pytest.raises(NotImplementedError):
+        OptionFactory('foo', 'foo').add_values()
