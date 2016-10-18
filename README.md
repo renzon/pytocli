@@ -5,7 +5,12 @@ A Python lib to generate CLI commands
 [![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
 [![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
 [![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/)
- 
+
+You can install it through pip:
+
+```console
+pip install pytocli
+``` 
 ## Problem
 
 You need generate some CLI commands and start simple as
