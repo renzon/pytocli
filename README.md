@@ -171,6 +171,7 @@ Option -v: Verbose mode
 
 ## Version 0.2
 * second approach with Metaclass and Descriptors
-## Version 0.2
+
+## Version 0.3
 * Fixed NoOptionValue raises error when passing parameter
-* Fixed Command.sub_commands
+* Fixed SubCommand docs when accessing as class attr (Ex: repr(Git.commit))
