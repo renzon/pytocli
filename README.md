@@ -4,7 +4,7 @@ A Python lib to generate CLI commands
 
 [![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
- 
+[![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/) 
 ## Problem
 
 You need generate some CLI commands and start simple as
