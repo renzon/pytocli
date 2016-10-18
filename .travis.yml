@@ -8,6 +8,7 @@ install: "pip install -r dev_requirements.txt coveralls"
 # command to run tests
 script:
   - flake8 .
+  - python -m doctest README.md
   - py.test tests
 after_success:
   - coveralls

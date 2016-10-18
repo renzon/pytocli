@@ -96,8 +96,8 @@ class Git(CommandBuilder):
     def start(self, value):
         return self.dashed_value_option('C', value)
 
-    def exec(self, value):
-        return self.double_dashed_value_option('exec-path', value)
+    def exec_path(self, value):
+        return self.double_dashed_value_option('exec_path', value)
 
     def fake(self, *values):
         return self.dashed_multi_value_option('fake', *values)
@@ -140,9 +140,9 @@ Passing parameters to parent command can be done even after subcommand creation:
 >>> str(commit)
 'git commit'
 >>> commit.parent_cmd
-'git'
+git
 >>> commit.parent_cmd.paginate()
-'git -p'
+git -p
 >>> str(commit)
 'git -p commit'
 
@@ -165,9 +165,9 @@ So the command can be:
 >>> str(commit)
 'git commit'
 >>> commit.git
-'git'
+git
 >>> commit.git.paginate()
-'git -p'
+git -p
 >>> str(commit)
 'git -p commit'
 

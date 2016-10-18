@@ -26,8 +26,8 @@ class Git(CommandBuilder):
     def start(self, value):
         return self.dashed_value_option('C', value)
 
-    def exec(self, value):
-        return self.double_dashed_value_option('exec-path', value)
+    def exec_path(self, value):
+        return self.double_dashed_value_option('exec_path-path', value)
 
     def fake(self, *values):
         return self.dashed_multi_value_option('fake', *values)
@@ -87,15 +87,15 @@ def test_dashed_value_option_duplicated():
 
 
 def test_double_dashed_value_option():
-    assert ('git --exec-path /usr/bin/git' ==
-            str(Git().double_dashed_value_option('exec-path', '/usr/bin/git')))
-    assert 'git --exec-path /usr/bin/git' == str(Git().exec('/usr/bin/git'))
+    assert ('git --exec_path-path /usr/bin/git' ==
+            str(Git().double_dashed_value_option('exec_path-path', '/usr/bin/git')))
+    assert 'git --exec_path-path /usr/bin/git' == str(Git().exec_path('/usr/bin/git'))
 
 
 def test_double_dashed_value_option_duplicated():
-    cmd = Git().exec('foo')
+    cmd = Git().exec_path('foo')
     with pytest.raises(ValueError):
-        cmd.exec('bar')
+        cmd.exec_path('bar')
 
 
 def test_dashed_with_multiple_values():
@@ -132,8 +132,8 @@ def test_complete_chaining():
     cmd = Git()
     assert 'git' == str(cmd)
     assert 'git -p' == str(cmd.paginate())
-    assert 'git -p --exec-path foo' == str(cmd.exec('foo'))
-    assert 'git -p --exec-path foo commit -m bar' == str(
+    assert 'git -p --exec_path-path foo' == str(cmd.exec_path('foo'))
+    assert 'git -p --exec_path-path foo commit -m bar' == str(
         cmd.commit().message('bar'))
     assert ('git -p commit -m baz' ==
             str(Git().paginate().commit().message('baz')))
