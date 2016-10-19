@@ -177,3 +177,5 @@ Option -v: Verbose mode
 * Fixed SubCommand docs when accessing as class attr (Ex: repr(Git.commit))
 
 ## [Version 0.4](https://github.com/renzon/pytocli/milestone/1)
+* Added equal_sign and separator parameters to Single and Multi Value Options
+* Fixed trove classifiers for pypi
