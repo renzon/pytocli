@@ -137,11 +137,6 @@ class SubCommand(object):
             return self.cmd_factory(object())
         return self.cmd_factory(instance)
 
-    def __repr__(self):
-        return 'SubCommand {}: {}'.format(
-            self.cmd_factory.name,
-            self.cmd_factory.__doc__ or 'No doc provided')
-
 
 class _CommandMeta(type):
     """metaclass to build Command options and subcommands"""
