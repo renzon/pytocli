@@ -104,11 +104,6 @@ def test_simple_command_doc_as_class_attr():
     assert 'CommandBuilder git: No doc provided' == repr(Git())
 
 
-def test_simple_sub_command_repr():
-    assert ('SubCommandBuilder commit: git commit sub command' ==
-            repr(Commit(Git())))
-
-
 def test_simple_sub_command_doc_as_class_attr():
     assert ('SubCommandBuilder commit: git commit sub command' ==
             repr(Git.commit))
