@@ -11,6 +11,10 @@ def read(fname):
     return codecs.open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
+def read_requirements(fname):
+    return read(fname).splitlines()
+
+
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
 standard_exclude = ["*.py", "*.pyc", "*$py.class", "*~", ".*", "*.bak"]
@@ -135,5 +139,5 @@ setup(
         "Framework :: Paste",
     ],
     zip_safe=False,
-    install_requires=['six>=1.10.0']
+    install_requires=read_requirements('requirements.txt')
 )
