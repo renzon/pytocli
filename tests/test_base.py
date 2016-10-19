@@ -17,7 +17,8 @@ class GitSubCommand(SubCommandBuilder):
 class Commit(GitSubCommand):
     """git commit sub command"""
     name = 'commit'
-    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
+    message = Option(SingleValueOption, '-m',
+                     doc='Message to be added on commit')
 
 
 class Revert(GitSubCommand):
@@ -27,7 +28,7 @@ class Revert(GitSubCommand):
 class Git(CommandBuilder):
     name = 'git'
     # Options
-    verbose = Option(NoValueOption, '-v', 'Verbose mode')
+    verbose = Option(NoValueOption, '-v', doc='Verbose mode')
     start = Option(SingleValueOption, '-C')
     multi = Option(MultiValuesOption, '--mu')
 
@@ -146,3 +147,17 @@ def test_options_class_attr():
 
 def test_sub_commands_class_attr():
     assert ('commit', 'revert') == Git.sub_commands
+
+
+class EqualAndSplitStub(CommandBuilder):
+    name = 'foo'
+    single = Option(SingleValueOption, 'single', equal_sign='#')
+    multi = Option(MultiValuesOption, 'multi', equal_sign='=')
+
+
+def test_single_equal_signal():
+    assert 'foo single#1' == str(EqualAndSplitStub().single(1))
+
+
+def test_multi_equal_signal():
+    assert 'foo multi=2 3 4' == str(EqualAndSplitStub().multi(2, 3, 4))
