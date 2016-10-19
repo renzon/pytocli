@@ -152,12 +152,12 @@ def test_sub_commands_class_attr():
 class EqualAndSplitStub(CommandBuilder):
     name = 'foo'
     single = Option(SingleValueOption, 'single', equal_sign='#')
-    multi = Option(MultiValuesOption, 'multi', equal_sign='=')
+    multi = Option(MultiValuesOption, 'multi', equal_sign='=', separator=',')
 
 
-def test_single_equal_signal():
+def test_single_equal_sign():
     assert 'foo single#1' == str(EqualAndSplitStub().single(1))
 
 
-def test_multi_equal_signal():
-    assert 'foo multi=2 3 4' == str(EqualAndSplitStub().multi(2, 3, 4))
+def test_multi_equal_sign_and_separator():
+    assert 'foo multi=2,3,4' == str(EqualAndSplitStub().multi(2, 3, 4))

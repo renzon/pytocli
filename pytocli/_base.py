@@ -9,7 +9,8 @@ from six import with_metaclass
 class OptionFactory(object):
     """Base class for all option factories. Must be extended"""
 
-    def __init__(self, name, cmd, equal_sign=' '):
+    def __init__(self, name, cmd, equal_sign=' ', separator=' '):
+        self.separator = separator
         self.equal_sign = equal_sign
         self.cmd = cmd
         self.name = name
@@ -66,7 +67,6 @@ class SingleValueOption(OptionFactory):
 class MultiValuesOption(OptionFactory):
     """Base class for all options which have exactly one value. Must be
     extended"""
-    values_separator = ' '
 
     def add_values(self, *values):
         if len(values) == 0 and len(self.values) == 0:
@@ -77,7 +77,7 @@ class MultiValuesOption(OptionFactory):
         self.values.extend(values)
 
     def __str__(self):
-        values_str = self.values_separator.join(map(str, self.values))
+        values_str = self.separator.join(map(str, self.values))
         return '{}{}{}'.format(self.name, self.equal_sign, values_str)
 
 
@@ -85,8 +85,13 @@ class Option(object):
     """Class to add options to Commands"""
     instances_counter = 0
 
-    def __init__(self, option_factory, option_name, equal_sign=' ',
+    def __init__(self,
+                 option_factory,
+                 option_name,
+                 equal_sign=' ',
+                 separator=' ',
                  doc='No doc provided'):
+        self.separator = separator
         self.equal_sign = equal_sign
         self.option_name = option_name
         type(self).instances_counter += 1
@@ -105,7 +110,7 @@ class Option(object):
             return self
         if self._attr not in instance.current_options:
             instance.current_options[self._attr] = self.option_factory(
-                self.option_name, instance, self.equal_sign)
+                self.option_name, instance, self.equal_sign, self.separator)
         return instance.current_options[self._attr]
 
     def __repr__(self):
