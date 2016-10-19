@@ -175,3 +175,5 @@ Option -v: Verbose mode
 ## Version 0.3
 * Fixed NoOptionValue raises error when passing parameter
 * Fixed SubCommand docs when accessing as class attr (Ex: repr(Git.commit))
+
+## [Version 0.4](https://github.com/renzon/pytocli/milestone/1)
