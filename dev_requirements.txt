@@ -4,5 +4,5 @@ mccabe==0.6.1
 py==1.4.34
 pycodestyle==2.0.0
 pyflakes==1.3.0
-pytest==3.0.3
+pytest==3.2.3
 pytest-cov==2.4.0
