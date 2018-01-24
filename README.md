@@ -153,13 +153,13 @@ CommandBuilder git: No doc provided
 ```python
 
 >>> from tests.test_base import *
->>> Git.options
-('name', 'verbose', 'start', 'multi')
+>>> Git._options
+('name', 'options', 'verbose', 'start', 'multi')
 >>> Git.verbose
 Option -v: Verbose mode
 >>> Git.sub_commands
 ('commit', 'revert')
->>> Git.commit.options
+>>> Git.commit._options
 ('message',)
 
 ```
