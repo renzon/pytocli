@@ -112,7 +112,7 @@ NAME = PACKAGE
 AUTHOR = "Renzo Nuccitelli"
 AUTHOR_EMAIL = "renzo.n@gmail.com"
 URL = "https://github.com/renzon/pytocli"
-VERSION = '0.5'
+VERSION = '0.6'
 
 setup(
     name=NAME,
