@@ -3,7 +3,7 @@
 A Python lib to generate CLI commands
 
 [![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
-[![Coverage Status](https://coveralls.io/repos/github/renzon/pytocli/badge.svg?branch=master)](https://coveralls.io/github/renzon/pytocli?branch=master)
+[![codecov](https://codecov.io/gh/renzon/pytocli/branch/master/graph/badge.svg)](https://codecov.io/gh/renzon/pytocli)
 [![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/)
 
 You can install it through pip:
@@ -105,13 +105,13 @@ Subcommands
 ...
 >>> #Create Sub commands
 >>> @Git._add_subcommand
->>> class Commit(GitSubCommand):
+... class Commit(GitSubCommand):
 ...    _name = 'commit'
 ...    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
 ...
 >>>
 >>> @Git._add_subcommand
->>> class Revert(GitSubCommand):
+... class Revert(GitSubCommand):
 ...    _name = 'revert'
 ...
 >>>
@@ -135,6 +135,7 @@ CommandBuilder git: No doc provided
 >>> commit.git
 CommandBuilder git: No doc provided
 >>> commit.git.verbose()
+CommandBuilder git: No doc provided
 >>> str(commit)
 'git -v commit'
 
@@ -145,13 +146,13 @@ CommandBuilder git: No doc provided
 ```python
 
 >>> Git._options
-('verbose', 'start', 'multi')
+['verbose', 'start', 'multi']
 >>> Git.verbose
 Option -v: Verbose mode
 >>> Git._sub_commands
-('commit', 'revert')
+['commit', 'revert']
 >>> Git.commit._options
-('message',)
+['message']
 
 ```
 

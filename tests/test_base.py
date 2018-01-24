@@ -21,10 +21,6 @@ class Commit(GitSubCommand):
                      doc='Message to be added on commit')
 
 
-class Revert(GitSubCommand):
-    _name = 'revert'
-
-
 class Git(CommandBuilder):
     _name = 'git'
     # Options
@@ -37,11 +33,52 @@ class Git(CommandBuilder):
 
     # SubCommands
     commit = SubCommand(Commit)
-    revert = SubCommand(Revert)
+
+
+@Git._add_subcommand
+class Revert(GitSubCommand):
+    _name = 'revert'
 
 
 def test_simple_command():
     assert 'git' == str(Git())
+
+
+def test_not_implemented_on_init():
+    class Sub(SubCommandBuilder):
+        pass
+
+    with pytest.raises(NotImplementedError):
+        Sub()
+
+
+def test_command_as_parent():
+    class Parent(CommandBuilder):
+        pass
+
+    @Parent._add_subcommand
+    class Sub(SubCommandBuilder):
+        pass
+
+    assert Sub._parent_factory == Parent
+    assert isinstance(Sub().parent_cmd, Parent)
+
+
+def test_sub_command_as_parent():
+    class Parent(CommandBuilder):
+        pass
+
+    @Parent._add_subcommand
+    class Sub(SubCommandBuilder):
+        pass
+
+    @Sub._add_subcommand
+    class SubSub(SubCommandBuilder):
+        pass
+
+    assert SubSub._parent_factory == Sub
+    assert isinstance(SubSub().parent_cmd, Sub)
+    assert isinstance(SubSub().parent_cmd.parent_cmd, Parent)
 
 
 def test_no_value():
@@ -141,7 +178,7 @@ def test_add_option_to_parent():
     assert 'git -v commit -m "a great msg"' == str(commit)
 
 
-def test_sub_commands_tuple():
+def test_sub_commands_list():
     assert ['commit', 'revert'] == Git._sub_commands
 
 
