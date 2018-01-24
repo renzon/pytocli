@@ -16,18 +16,19 @@ class GitSubCommand(SubCommandBuilder):
 
 class Commit(GitSubCommand):
     """git commit sub command"""
-    name = 'commit'
+    _name = 'commit'
     message = Option(SingleValueOption, '-m',
                      doc='Message to be added on commit')
 
 
 class Revert(GitSubCommand):
-    name = 'revert'
+    _name = 'revert'
 
 
 class Git(CommandBuilder):
-    name = 'git'
+    _name = 'git'
     # Options
+    name = Option(SingleValueOption, '--name', doc='Name option')
     verbose = Option(NoValueOption, '-v', doc='Verbose mode')
     start = Option(SingleValueOption, '-C')
     multi = Option(MultiValuesOption, '--mu')
@@ -43,6 +44,9 @@ def test_simple_command():
 
 def test_no_value():
     assert 'git -v' == str(Git().verbose())
+
+def test_name_command_option_clash():
+    assert 'git --name foo' == str(Git().name('foo'))
 
 
 def test_no_value_can_not_receive_value():
@@ -93,7 +97,7 @@ def test_doc_on_repr_for_options():
 
 
 def test_options_tuple():
-    assert ('verbose', 'start', 'multi') == Git.options
+    assert ('name', 'verbose', 'start', 'multi') == Git.options
 
 
 def test_simple_sub_command():
@@ -142,7 +146,7 @@ def test_option_factory_add_values_is_abstract():
 
 
 def test_options_class_attr():
-    assert ('verbose', 'start', 'multi') == Git.options
+    assert ('name', 'verbose', 'start', 'multi') == Git.options
 
 
 def test_sub_commands_class_attr():
@@ -150,7 +154,7 @@ def test_sub_commands_class_attr():
 
 
 class EqualAndSplitStub(CommandBuilder):
-    name = 'foo'
+    _name = 'foo'
     single = Option(SingleValueOption, 'single', equal_sign='#')
     multi = Option(MultiValuesOption, 'multi', equal_sign='=', separator=',')
 

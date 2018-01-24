@@ -71,7 +71,7 @@ from pytocli import CommandBuilder
 
 
 class Git(CommandBuilder):
-    name = 'git'
+    _name = 'git'
 ```
 
 ## Step 2: create command options
@@ -82,7 +82,7 @@ from pytocli import (CommandBuilder, Option, NoValueOption,
 
 
 class Git(CommandBuilder):
-    name = 'git'
+    _name = 'git'
     # Options
     verbose = Option(NoValueOption, '-v', 'Verbose mode')
     start = Option(SingleValueOption, '-C')
@@ -105,12 +105,12 @@ class GitSubCommand(SubCommandBuilder):
 
 
 class Commit(GitSubCommand):
-    name = 'commit'
+    _name = 'commit'
     message = Option(SingleValueOption, '-m', 'Message to be added on commit')
 
 
 class Revert(GitSubCommand):
-    name = 'revert'
+    _name = 'revert'
 
 ```
 
@@ -119,7 +119,7 @@ class Revert(GitSubCommand):
 ```python
 
 class Git(CommandBuilder):
-    name = 'git'
+    _name = 'git'
     # Options
     verbose = Option(NoValueOption, '-v', 'Verbose mode')
     start = Option(SingleValueOption, '-C')
@@ -154,7 +154,7 @@ CommandBuilder git: No doc provided
 
 >>> from tests.test_base import *
 >>> Git.options
-('verbose', 'start', 'multi')
+('name', 'verbose', 'start', 'multi')
 >>> Git.verbose
 Option -v: Verbose mode
 >>> Git.sub_commands
