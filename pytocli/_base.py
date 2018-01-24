@@ -125,7 +125,7 @@ class SubCommand(object):
         type(self).instances_counter += 1
         self.count = self.instances_counter
         self.cmd_factory = cmd_factory
-        self.name = None
+        self._set_cmd_attr_name(getattr(cmd_factory, '_name', None))
 
     def _set_cmd_attr_name(self, name):
         self._attr = name
@@ -150,20 +150,22 @@ class _CommandMeta(type):
             set_descriptor_attr_name(attr_value, attr_name)
             for attr_name, attr_value in attrs.items()
             if hasattr(attr_value, '_set_attr_name')
-            ]
+        ]
         options.sort(key=lambda op: op.count)
 
         def set_descriptor_cmd_attr_name(descriptor, name):
             descriptor._set_cmd_attr_name(name)
             return descriptor
 
-        sub_commands = [set_descriptor_cmd_attr_name(attr_value, attr_name)
-                        for attr_name, attr_value in attrs.items()
-                        if hasattr(attr_value, '_set_cmd_attr_name')]
+        sub_commands = [
+            set_descriptor_cmd_attr_name(attr_value, attr_name)
+            for attr_name, attr_value in attrs.items()
+            if hasattr(attr_value, '_set_cmd_attr_name')
+        ]
         sub_commands.sort(key=lambda op: op.count)
 
-        attrs['_options'] = tuple(op._attr for op in options)
-        attrs['_sub_commands'] = tuple(sub._attr for sub in sub_commands)
+        attrs['_options'] = [op._attr for op in options]
+        attrs['_sub_commands'] = [sub._attr for sub in sub_commands]
 
         return super(_CommandMeta, cls).__new__(cls, class_to_be_created_name,
                                                 bases, attrs)
@@ -171,8 +173,8 @@ class _CommandMeta(type):
 
 class CommandBuilder(with_metaclass(_CommandMeta)):
     _name = ''
-    _options = tuple()  # going to be filled by _CommandMeta
-    _sub_commands = tuple()  # going to be filled by _CommandMeta
+    _options = []  # going to be filled by _CommandMeta
+    _sub_commands = []  # going to be filled by _CommandMeta
 
     def __init__(self):
         self.current_options = OrderedDict()  # options added to command
@@ -189,10 +191,24 @@ class CommandBuilder(with_metaclass(_CommandMeta)):
             self._name,
             self.__doc__ or 'No doc provided')
 
+    @classmethod
+    def _add_subcommand(cls, subcommand_class):
+        cls._sub_commands.append(subcommand_class._name)
+        setattr(cls, subcommand_class._name, SubCommand(subcommand_class))
+        subcommand_class._parent_factory = cls
+        return subcommand_class
+
 
 class SubCommandBuilder(CommandBuilder):
-    def __init__(self, parent_cmd):
+    _parent_factory = None
+
+    def __init__(self, parent_cmd=None):
         super(SubCommandBuilder, self).__init__()
+        if parent_cmd is None and self._parent_factory is None:
+            raise NotImplementedError(
+                'when parent_cmd is None, _parent_factory must be defined')
+        elif parent_cmd is None:
+            parent_cmd = self._parent_factory()
         self.parent_cmd = parent_cmd
 
     def __str__(self):

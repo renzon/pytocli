@@ -21,10 +21,6 @@ class Commit(GitSubCommand):
                      doc='Message to be added on commit')
 
 
-class Revert(GitSubCommand):
-    _name = 'revert'
-
-
 class Git(CommandBuilder):
     _name = 'git'
     # Options
@@ -37,11 +33,52 @@ class Git(CommandBuilder):
 
     # SubCommands
     commit = SubCommand(Commit)
-    revert = SubCommand(Revert)
+
+
+@Git._add_subcommand
+class Revert(GitSubCommand):
+    _name = 'revert'
 
 
 def test_simple_command():
     assert 'git' == str(Git())
+
+
+def test_not_implemented_on_init():
+    class Sub(SubCommandBuilder):
+        pass
+
+    with pytest.raises(NotImplementedError):
+        Sub()
+
+
+def test_command_as_parent():
+    class Parent(CommandBuilder):
+        pass
+
+    @Parent._add_subcommand
+    class Sub(SubCommandBuilder):
+        pass
+
+    assert Sub._parent_factory == Parent
+    assert isinstance(Sub().parent_cmd, Parent)
+
+
+def test_sub_command_as_parent():
+    class Parent(CommandBuilder):
+        pass
+
+    @Parent._add_subcommand
+    class Sub(SubCommandBuilder):
+        pass
+
+    @Sub._add_subcommand
+    class SubSub(SubCommandBuilder):
+        pass
+
+    assert SubSub._parent_factory == Sub
+    assert isinstance(SubSub().parent_cmd, Sub)
+    assert isinstance(SubSub().parent_cmd.parent_cmd, Parent)
 
 
 def test_no_value():
@@ -109,7 +146,7 @@ def test_doc_on_repr_for_options():
 
 def test_options_tuple():
     assert (
-        ('name', 'options', 'sub_commands', 'verbose', 'start', 'multi')
+        ['name', 'options', 'sub_commands', 'verbose', 'start', 'multi']
         ==
         Git._options
     )
@@ -141,8 +178,8 @@ def test_add_option_to_parent():
     assert 'git -v commit -m "a great msg"' == str(commit)
 
 
-def test_sub_commands_tuple():
-    assert ('commit', 'revert') == Git._sub_commands
+def test_sub_commands_list():
+    assert ['commit', 'revert'] == Git._sub_commands
 
 
 def test_option_factory_str_is_abstract():
@@ -162,14 +199,14 @@ def test_option_factory_add_values_is_abstract():
 
 def test_options_class_attr():
     assert (
-        ('name', 'options', 'sub_commands', 'verbose', 'start', 'multi')
+        ['name', 'options', 'sub_commands', 'verbose', 'start', 'multi']
         ==
         Git._options
     )
 
 
 def test_sub_commands_class_attr():
-    assert ('commit', 'revert') == Git._sub_commands
+    assert ['commit', 'revert'] == Git._sub_commands
 
 
 class EqualAndSplitStub(CommandBuilder):

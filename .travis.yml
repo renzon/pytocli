@@ -4,11 +4,11 @@ python:
   - "3.5"
   - "pypy"
 # command to install dependencies
-install: "pip install -r dev_requirements.txt coveralls"
+install: "pip install -r dev_requirements.txt codecov"
 # command to run tests
 script:
   - flake8 .
   - py.test --cov=pytocli tests/
   - python -m doctest README.md
 after_success:
-  - coveralls
+  - codecov
