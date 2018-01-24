@@ -5,6 +5,7 @@ A Python lib to generate CLI commands
 [![Travis Status](https://travis-ci.org/renzon/pytocli.svg?branch=master)](https://travis-ci.org/renzon/pytocli)
 [![codecov](https://codecov.io/gh/renzon/pytocli/branch/master/graph/badge.svg)](https://codecov.io/gh/renzon/pytocli)
 [![Updates](https://pyup.io/repos/github/renzon/pytocli/shield.svg)](https://pyup.io/repos/github/renzon/pytocli/)
+[![Python 3](https://pyup.io/repos/github/renzon/pytocli/python-3-shield.svg)](https://pyup.io/repos/github/renzon/pytocli/)
 
 You can install it through pip:
 
