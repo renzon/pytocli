@@ -30,6 +30,7 @@ class Git(CommandBuilder):
     # Options
     name = Option(SingleValueOption, '--name', doc='Name option')
     options = Option(SingleValueOption, '--options', doc='Options')
+    sub_commands = Option(SingleValueOption, '--subs', doc='Sub Commands')
     verbose = Option(NoValueOption, '-v', doc='Verbose mode')
     start = Option(SingleValueOption, '-C')
     multi = Option(MultiValuesOption, '--mu')
@@ -53,6 +54,10 @@ def test_name_command_option_clash():
 
 def test_options_name_clash():
     assert 'git --options foo' == str(Git().options('foo'))
+
+
+def test_sub_commands_name_clash():
+    assert 'git --subs foo' == str(Git().sub_commands('foo'))
 
 
 def test_no_value_can_not_receive_value():
@@ -103,7 +108,11 @@ def test_doc_on_repr_for_options():
 
 
 def test_options_tuple():
-    assert ('name', 'options', 'verbose', 'start', 'multi') == Git._options
+    assert (
+        ('name', 'options', 'sub_commands', 'verbose', 'start', 'multi')
+        ==
+        Git._options
+    )
 
 
 def test_simple_sub_command():
@@ -133,7 +142,7 @@ def test_add_option_to_parent():
 
 
 def test_sub_commands_tuple():
-    assert ('commit', 'revert') == Git.sub_commands
+    assert ('commit', 'revert') == Git._sub_commands
 
 
 def test_option_factory_str_is_abstract():
@@ -152,11 +161,15 @@ def test_option_factory_add_values_is_abstract():
 
 
 def test_options_class_attr():
-    assert ('name', 'options', 'verbose', 'start', 'multi') == Git._options
+    assert (
+        ('name', 'options', 'sub_commands', 'verbose', 'start', 'multi')
+        ==
+        Git._options
+    )
 
 
 def test_sub_commands_class_attr():
-    assert ('commit', 'revert') == Git.sub_commands
+    assert ('commit', 'revert') == Git._sub_commands
 
 
 class EqualAndSplitStub(CommandBuilder):
