@@ -67,67 +67,69 @@ The lib goal is provide a fluent interface to generate cli commands:
 The command name must be overwritten as class attribute.
  
 ```python
-from pytocli import CommandBuilder
+>>> from pytocli import CommandBuilder
 
 
-class Git(CommandBuilder):
-    _name = 'git'
+>>> class Git(CommandBuilder):
+...    _name = 'git'
+
 ```
 
 ## Step 2: create command options
  
 ```python
-from pytocli import (CommandBuilder, Option, NoValueOption, 
-                     SingleValueOption, MultiValuesOption)
-
-
-class Git(CommandBuilder):
-    _name = 'git'
-    # Options
-    verbose = Option(NoValueOption, '-v', 'Verbose mode')
-    start = Option(SingleValueOption, '-C')
-    multi = Option(MultiValuesOption, '--mu')
+>>> from pytocli import (CommandBuilder, Option, NoValueOption, 
+...                     SingleValueOption, MultiValuesOption)
+>>> class Git(CommandBuilder):
+...     _name = 'git'
+...     # Options
+...     verbose = Option(NoValueOption, '-v', 'Verbose mode')
+...     start = Option(SingleValueOption, '-C')
+...     multi = Option(MultiValuesOption, '--mu')
+...
+>>>
 
 ```
 ## Step 3: create a sub commands following steps 1 and 2
  
 ```python
-from pytocli import (CommandBuilder, Option, NoValueOption, 
-                     SingleValueOption, MultiValuesOption, 
-                     SubCommandBuilder)
-
-
-
-class GitSubCommand(SubCommandBuilder):
-    @property
-    def git(self):
-        return self.parent_cmd
-
-
-class Commit(GitSubCommand):
-    _name = 'commit'
-    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
-
-
-class Revert(GitSubCommand):
-    _name = 'revert'
+>>> from pytocli import SubCommandBuilder
+>>> # Create base git subcommand only to acces git through property with same
+>>> # name instead of parent_cmd 
+>>> class GitSubCommand(SubCommandBuilder):
+...     @property
+...     def git(self):
+...         return self.parent_cmd
+...
+>>> #Create Sub commands
+>>> class Commit(GitSubCommand):
+...    _name = 'commit'
+...    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
+...
+>>>
+>>> class Revert(GitSubCommand):
+...    _name = 'revert'
+...
+>>>
 
 ```
 
 ## Step 4: Connecting CommandBuilder connecting SubCommandBuilders
  
 ```python
-
-class Git(CommandBuilder):
-    _name = 'git'
-    # Options
-    verbose = Option(NoValueOption, '-v', 'Verbose mode')
-    start = Option(SingleValueOption, '-C')
-    multi = Option(MultiValuesOption, '--mu')
-
-    # SubCommands
-    commit = SubCommand(Commit)
-    revert = SubCommand(Revert)
+>>> from pytocli import SubCommand
+>>> class Git(CommandBuilder):
+...     _name = 'git'
+...     # Options
+...     verbose = Option(NoValueOption, '-v', doc = 'Verbose mode')
+...     start = Option(SingleValueOption, '-C')
+...     multi = Option(MultiValuesOption, '--mu')
+... 
+...     # SubCommands
+...     commit = SubCommand(Commit)
+...     revert = SubCommand(Revert)
+... 
+>>>
 
 ```
 
@@ -152,9 +154,8 @@ CommandBuilder git: No doc provided
 
 ```python
 
->>> from tests.test_base import *
 >>> Git._options
-('name', 'options', 'sub_commands', 'verbose', 'start', 'multi')
+('verbose', 'start', 'multi')
 >>> Git.verbose
 Option -v: Verbose mode
 >>> Git._sub_commands
@@ -179,3 +180,7 @@ Option -v: Verbose mode
 ## [Version 0.4](https://github.com/renzon/pytocli/milestone/1)
 * Added equal_sign and separator parameters to Single and Multi Value Options
 * Fixed trove classifiers for pypi
+
+## [Version 0.6](https://github.com/renzon/pytocli/milestone/3)
+* Changed class attributes to avoid naming clash
+* Created class decorator to Connect Commands and SubCommand
