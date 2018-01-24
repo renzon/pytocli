@@ -170,7 +170,7 @@ class _CommandMeta(type):
 
 
 class CommandBuilder(with_metaclass(_CommandMeta)):
-    name = ''
+    _name = ''
     options = tuple()  # going to be filled by _CommandMeta
     sub_commands = tuple()  # going to be filled by _CommandMeta
 
@@ -180,13 +180,13 @@ class CommandBuilder(with_metaclass(_CommandMeta)):
 
     def __str__(self):
         if len(self.current_options) == 0:
-            return self.name
+            return self._name
         options_str = ' '.join(map(str, self.current_options.values()))
-        return ' '.join((self.name, options_str))
+        return ' '.join((self._name, options_str))
 
     def __repr__(self):
         return 'CommandBuilder {}: {}'.format(
-            self.name,
+            self._name,
             self.__doc__ or 'No doc provided')
 
 
@@ -203,5 +203,5 @@ class SubCommandBuilder(CommandBuilder):
 
     def __repr__(self):
         return 'SubCommandBuilder {}: {}'.format(
-            self.name,
+            self._name,
             self.__doc__ or 'No doc provided')
