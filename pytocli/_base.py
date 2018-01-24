@@ -162,8 +162,8 @@ class _CommandMeta(type):
                         if hasattr(attr_value, '_set_cmd_attr_name')]
         sub_commands.sort(key=lambda op: op.count)
 
-        attrs['_options'] = tuple(op._attr for op in options)
-        attrs['_sub_commands'] = tuple(sub._attr for sub in sub_commands)
+        attrs['_options'] = [op._attr for op in options]
+        attrs['_sub_commands'] = [sub._attr for sub in sub_commands]
 
         return super(_CommandMeta, cls).__new__(cls, class_to_be_created_name,
                                                 bases, attrs)
@@ -171,8 +171,8 @@ class _CommandMeta(type):
 
 class CommandBuilder(with_metaclass(_CommandMeta)):
     _name = ''
-    _options = tuple()  # going to be filled by _CommandMeta
-    _sub_commands = tuple()  # going to be filled by _CommandMeta
+    _options = []  # going to be filled by _CommandMeta
+    _sub_commands = []  # going to be filled by _CommandMeta
 
     def __init__(self):
         self.current_options = OrderedDict()  # options added to command

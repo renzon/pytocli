@@ -83,7 +83,7 @@ The command name must be overwritten as class attribute.
 >>> class Git(CommandBuilder):
 ...     _name = 'git'
 ...     # Options
-...     verbose = Option(NoValueOption, '-v', 'Verbose mode')
+...     verbose = Option(NoValueOption, '-v', doc= 'Verbose mode')
 ...     start = Option(SingleValueOption, '-C')
 ...     multi = Option(MultiValuesOption, '--mu')
 ...
@@ -91,6 +91,8 @@ The command name must be overwritten as class attribute.
 
 ```
 ## Step 3: create a sub commands following steps 1 and 2
+The only difference is using `_add_subcommand` decorator to add them as Git
+Subcommands
  
 ```python
 >>> from pytocli import SubCommandBuilder
@@ -102,11 +104,13 @@ The command name must be overwritten as class attribute.
 ...         return self.parent_cmd
 ...
 >>> #Create Sub commands
+>>> @Git._add_subcommand
 >>> class Commit(GitSubCommand):
 ...    _name = 'commit'
 ...    message = Option(SingleValueOption, '-m', 'Message to be added on commit')
 ...
 >>>
+>>> @Git._add_subcommand
 >>> class Revert(GitSubCommand):
 ...    _name = 'revert'
 ...
@@ -114,26 +118,7 @@ The command name must be overwritten as class attribute.
 
 ```
 
-## Step 4: Connecting CommandBuilder connecting SubCommandBuilders
- 
-```python
->>> from pytocli import SubCommand
->>> class Git(CommandBuilder):
-...     _name = 'git'
-...     # Options
-...     verbose = Option(NoValueOption, '-v', doc = 'Verbose mode')
-...     start = Option(SingleValueOption, '-C')
-...     multi = Option(MultiValuesOption, '--mu')
-... 
-...     # SubCommands
-...     commit = SubCommand(Commit)
-...     revert = SubCommand(Revert)
-... 
->>>
-
-```
-
-## Step 5: Add parameters to Parent command
+# After setup, parameters can me sent to parent command
 
 Passing parameters to parent command can be done even after subcommand creation:
  
@@ -141,10 +126,15 @@ Passing parameters to parent command can be done even after subcommand creation:
 >>> commit = Git().commit
 >>> str(commit)
 'git commit'
+>>> # Same result using Commit directly 
+>>> commit = Commit()
+>>> str(commit)
+'git commit'
 >>> commit.parent_cmd
 CommandBuilder git: No doc provided
->>> commit.parent_cmd.verbose()
+>>> commit.git
 CommandBuilder git: No doc provided
+>>> commit.git.verbose()
 >>> str(commit)
 'git -v commit'
 
